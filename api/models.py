@@ -29,3 +29,21 @@ class Stations(models.Model):
 
     class Meta:
         ordering = ['-id']
+
+class Proyecto(models.Model):
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=100)
+    type = models.CharField(max_length=20)
+    region = models.CharField(max_length=50)
+    typology = models.CharField(max_length=10)
+    responsible = models.CharField(max_length=100)
+    investment = models.CharField(max_length=50) #podria ser en otro formato para comparar
+    date = models.DateField()
+    status = models.CharField(max_length=25)
+
+    def __str__(self):
+        def __str__(self):
+            return f'{self.name} - {self.responsible}'
+
+        class Meta:
+            ordering = ['-id']
