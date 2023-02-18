@@ -32,11 +32,11 @@ class Stations(models.Model):
 
 class Proyecto(models.Model):
     id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=250)
     type = models.CharField(max_length=20)
     region = models.CharField(max_length=50)
     typology = models.CharField(max_length=10)
-    responsible = models.CharField(max_length=100)
+    responsible = models.CharField(max_length=250)
     investment = models.CharField(max_length=50) #podria ser en otro formato para comparar
     date = models.DateField()
     status = models.CharField(max_length=25)
