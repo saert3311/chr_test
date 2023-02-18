@@ -16,11 +16,8 @@ def bikesantiago_view(request):
     return render(request, 'bikesantiago.html', {'stations': station_objects})
 
 def scrapper_view(request):
-    try:
-        Proyecto.objects.all().delete()
-        pages = get_pages('https://seia.sea.gob.cl/busqueda/buscarProyectoAction.php')
-        project_list = scrap_pages('https://seia.sea.gob.cl/busqueda/buscarProyectoAction.php?_paginador_fila_actual=', pages)
-        project_objects = Proyecto.objects.bulk_create(project_list)
-    except:
-        raise Http404('There was an error')
-    return render(request, 'seia.html', {'projets': project_objects})
+    Proyecto.objects.all().delete()
+    pages = get_pages('https://seia.sea.gob.cl/busqueda/buscarProyectoAction.php')
+    project_list = scrap_pages('https://seia.sea.gob.cl/busqueda/buscarProyectoAction.php?_paginador_fila_actual=', pages)
+    project_objects = Proyecto.objects.bulk_create(project_list)
+    return render(request, 'seia.html', {'projects': project_objects})

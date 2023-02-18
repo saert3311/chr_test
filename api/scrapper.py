@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 from .models import Proyecto
 from datetime import datetime
+import concurrent.futures
 
 def get_pages(url:str) -> int:
     """
@@ -10,7 +11,7 @@ def get_pages(url:str) -> int:
     :return: an integer with number of pages
     """
     response = requests.get(url)
-    soup = BeautifulSoup(response.text)
+    soup = BeautifulSoup(response.content, 'html.parser')
     select_tag = soup.find('select')
     options_count = len(select_tag.find_all('option'))
     return options_count
@@ -25,23 +26,43 @@ def scrap_pages(url:str, pages: int) -> list:
 
     rows = []
 
-    for page in url_generator:
-        response = requests.get(page)
-        soup = BeautifulSoup(response.text)
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = [executor.submit(scrap_page, url) for url in url_generator]
 
-        for row in soup.find_all('tr'):
-            columns = row.find_all('td')
-            new_item = Proyecto(
-                id=columns[0].text.strip(),
-                name=columns[1].text.strip(),
-                type=columns[2].text.strip(),
-                region=columns[3].text.strip(),
-                typology=columns[4].text.strip(),
-                responsible=columns[5].text.strip(),
-                investment=columns[6].text.strip(),
-                date=datetime.strptime(columns[6].text.strip(), '%d/%m/%y').date(),
-                status=columns[7].text.strip()
-            )
-            rows.append(new_item)
+    for future in concurrent.futures.as_completed(futures):
+        data = future.result()
+        rows.append(data)
 
     return rows
+
+
+def scrap_page(url:str) -> list:
+    """
+    Function to scrap an individual page
+    :param url: url to scrap
+    :return: list of Proyecto objects
+    """
+    row_data = []
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+    cols = len(soup.find_all('th'))
+
+    for row in soup.find_all('tr'):
+        columns = row.find_all('td')
+        if len(columns) == 0 or len(columns) != cols:  # con esto omitimos la primera fila de los headers
+            continue
+        print(columns)
+        new_item = Proyecto(
+            id=columns[0].text.strip(),
+            name=columns[1].text.strip(),
+            type=columns[2].text.strip(),
+            region=columns[3].text.strip(),
+            typology=columns[4].text.strip(),
+            responsible=columns[5].text.strip(),
+            investment=columns[6].text.strip(),
+            date=datetime.strptime(columns[7].text.strip(), '%d/%m/%Y').date(),
+            status=columns[8].text.strip()
+        )
+        row_data.append(new_item)
+    return row_data
