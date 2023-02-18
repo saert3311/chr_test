@@ -1,3 +1,5 @@
+from http.client import RemoteDisconnected
+
 from bs4 import BeautifulSoup
 import requests
 from .models import Proyecto
@@ -22,20 +24,20 @@ def scrap_pages(url:str, pages: int) -> list:
     :param url:
     :return: A list of objects
     """
-    url_generator = (url + str(i) for i in range(pages))
+    url_generator = (url + str(i) for i in range(1, pages))
 
     rows = []
+    try:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = [executor.submit(scrap_page, url) for url in url_generator]
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        futures = [executor.submit(scrap_page, url) for url in url_generator]
-
-    for future in concurrent.futures.as_completed(futures):
-        data = future.result()
-        rows.append(data)
-
-    return rows
-
-
+        for future in concurrent.futures.as_completed(futures):
+            data = future.result()
+            rows.extend(data)
+        return rows
+    except RemoteDisconnected as e:
+        print(e)
+        return rows
 def scrap_page(url:str) -> list:
     """
     Function to scrap an individual page
@@ -54,7 +56,7 @@ def scrap_page(url:str) -> list:
             continue
         print(columns)
         new_item = Proyecto(
-            id=columns[0].text.strip(),
+            id=int(columns[0].text.strip()),
             name=columns[1].text.strip(),
             type=columns[2].text.strip(),
             region=columns[3].text.strip(),
