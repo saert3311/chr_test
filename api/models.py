@@ -18,7 +18,7 @@ class Stations(models.Model):
     normal_bikes = models.IntegerField()
     payment = models.JSONField()
     payment_terminal = models.BooleanField()
-    post_code = models.CharField(max_length=20)
+    post_code = models.CharField(max_length=20, blank=True, null=True) #la documentacion de la api no dice cuales son campos opcionales
     renting = models.IntegerField()
     slots = models.IntegerField()
     uid = models.CharField(max_length=20)
