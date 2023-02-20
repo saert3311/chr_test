@@ -16,9 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from api.views import bikesantiago_view, scrapper_view
+from api.views import bikesantiago_view, scrapper_process, list_proyectos, scrapper_render
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('bikesantiago/', bikesantiago_view, name='bikesantiago'),
-    path('scrapper/', scrapper_view, name='seia')
+    path('scrapper/', scrapper_render, name='show_page'),
+    path('scrapper/refresh/', scrapper_process, name='refresh'),
+    path('scrapper/proyectos/', list_proyectos, name='proyectos_json')
 ]

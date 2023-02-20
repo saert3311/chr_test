@@ -13,6 +13,7 @@
     <div class="row">
         <div class="col">
             <h1>SEIA</h1>
+            <button id="refrescar">Refrescar</button>
         </div>
     </div>
         <div class="row">
@@ -31,21 +32,6 @@
       <th>Estado</th>
     </tr>
   </thead>
-  <tbody>
-  {% for item in projects %}
-    <tr>
-      <td>{{ item.id }}</td>
-      <td>{{ item.name }}</td>
-      <td>{{ item.type }}</td>
-      <td>{{ item.region }}</td>
-      <td>{{ item.typology }}</td>
-      <td>{{ item.responsible }}</td>
-      <td>{{ item.investment }}</td>
-      <td>{{ item.date }}</td>
-      <td>{{ item.status }}</td>
-    </tr>
-  {% endfor %}
-  </tbody>
 </table>
             </div>
         </div>
@@ -55,8 +41,38 @@
     <script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
   <script>
       $(document).ready(function () {
-    $('#the_table').DataTable();
-});
+    $('#the_table').DataTable({
+        ajax: {
+            'url':'/scrapper/proyectos/',
+            'dataSrc':''
+        },
+        columns: [
+            { data: 'id' },
+            { data: 'name' },
+            { data: 'type' },
+            { data: 'region' },
+            { data: 'typology' },
+            { data: 'responsible' },
+            { data: 'investment' },
+            { data: 'date' },
+            { data: 'status' }
+        ],
+    });
+        $('#refrescar').on('click', function (){
+        $.ajax('/scrapper/refresh/',{
+            beforeSend:function(){
+                $('#refrescar').text('Cargando...')
+            },
+            success: function (data){
+                if(data.result === 'ok'){
+                    $('#the_table').DataTable().ajax.reload()
+                    $('#refrescar').text('Refrescar')
+                }
+            }
+        })
+      })
+}
+);
   </script>
   </body>
 </html>

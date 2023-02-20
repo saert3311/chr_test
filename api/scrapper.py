@@ -45,6 +45,7 @@ def scrap_page(url:str) -> list:
     :return: list of Proyecto objects
     """
     row_data = []
+    print(url)
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
 
@@ -54,7 +55,6 @@ def scrap_page(url:str) -> list:
         columns = row.find_all('td')
         if len(columns) == 0 or len(columns) != cols:  # con esto omitimos la primera fila de los headers
             continue
-        print(columns)
         new_item = Proyecto(
             id=int(columns[0].text.strip()),
             name=columns[1].text.strip(),
