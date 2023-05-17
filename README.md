@@ -22,7 +22,8 @@ Una vez activo el entorno virtual se instalan las dependencias
 
 ## db
 
-django esta configurado para usar una db en postgres por lo que debes realizar los ajustes en el archivo settings.py
+django esta configurado para usar una db en postgres tiene el usuario y la contraseña por defecto, igualmente puedes crear
+la bd que se llamara chr donde se haran las migraciones respectivas
 
 
 
@@ -31,7 +32,11 @@ django esta configurado para usar una db en postgres por lo que debes realizar l
 
 Existen solo 2 enlaces que son 
 
-/bikesantiago/ Para el punto 1, este toma los datos de la api y la muestra en una tabla ademas de haberlo guardado anteriormente
+http://127.0.0.1:8000/citibik/bikerio/ Para el punto 1, este toma los datos de la api y la muestra en una tabla ademas de haberlo guardado anteriormente
+
+bikerio se pasa como argumento por lo que podrian consultarse otros endpoins de http://api.citybik.es/v2/networks
+
+Claro se necesitaria mas pruebas y ajustes si hay discrepancias entre la informacion proporcionada pero la funcionalidad base ya esta.
 
 /scrapper/ Para el punto 2, tomar en cuenta que el proceso es largo dado que son varias paginas a buscar, igualmente se uso concurrencia para acelerar el proceso.
 

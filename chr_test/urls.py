@@ -16,10 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from api.views import bikesantiago_view, scrapper_process, list_proyectos, scrapper_render
+from api.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('bikesantiago/', bikesantiago_view, name='bikesantiago'),
+    path('', index_view, name='index'),
+    path('citibik/<str:city>/', citibik_view, name='citibik'),
+    path('snifa/', snifa_scrapper_render, name='snifa_render'),
+    path('snifa/refresh/', snifa_scrapper_process, name='snifa_refresh'),
+    path('snifa/list/', snifa_list_procedimientos, name='list_procedimientos'),
     path('scrapper/', scrapper_render, name='show_page'),
     path('scrapper/refresh/', scrapper_process, name='refresh'),
     path('scrapper/proyectos/', list_proyectos, name='proyectos_json')

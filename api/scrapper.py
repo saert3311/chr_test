@@ -28,7 +28,7 @@ def scrap_pages(url:str, pages: int) -> list:
 
     rows = []
     try:
-        with concurrent.futures.ThreadPoolExecutor() as executor:
+        with concurrent.futures.ThreadPoolExecutor(100) as executor:
             futures = [executor.submit(scrap_page, url) for url in url_generator]
 
         for future in concurrent.futures.as_completed(futures):

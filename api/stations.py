@@ -5,9 +5,9 @@ from django.utils.timezone import make_aware
 
 def flatten_dict(d) -> dict:
     """
-    Function to flatten a dict, without the nested dict key
-    :param d: the dict to flatten
-    :return: the flattened dict
+    Funcion para aplanar el dict, sin la llave anidada
+    :param d: el dict a aplanar
+    :return: el dict aplanado
     """
     items = []
     for k, v in d.items():
@@ -19,9 +19,9 @@ def flatten_dict(d) -> dict:
 
 def format_datetimes_with_tz(input: str) -> datetime:
     """
-    Function to transform str to a datetime object an add TZ info
-    :param input: and ISO 8601 string datetime
-    :return: datetime object with TZ info
+    Funcion para transformar un str a un objeto datetime y agregar el dato del timezone
+    :param input: fecha en formato ISO 8601 en str
+    :return: un objeto datetime
     """
     datetime_object = datetime.strptime(input, '%Y-%m-%dT%H:%M:%S.%f%z')
     if datetime_object.tzinfo is None or datetime_object.tzinfo.utcoffset(datetime_object) is None:
